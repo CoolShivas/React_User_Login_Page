@@ -1,5 +1,5 @@
 import InputFields from '../UI/InputFields';
-import React, { useEffect, useState, useReducer, useContext } from 'react';
+import React, { useEffect, useState, useReducer, useContext, useRef } from 'react';
 import Card from '../UI/Card';
 import classes from './Login.module.css';
 import Button from '../UI/Button';
@@ -131,13 +131,23 @@ const Login = () => {
         setCollegeIsValid(enteredCollege.trim().length > 0);
     };
 
-
+    const emailInputRef = useRef();
+    const passwordInputRef = useRef();
 
 
     const submitHandler = (event) => {
         event.preventDefault();
         // props.onLogin(enteredEmail, enteredPassword, enteredCollege);
-        autoCtx.onLogin(emailState.value, passwordState.value, enteredCollege);
+        if (formIsValid) {
+            autoCtx.onLogin(emailState.value, passwordState.value, enteredCollege);
+        }
+        else if (!emailIsValid) {
+            emailInputRef.current.activate();
+        }
+        else {
+            passwordInputRef.current.activate();
+        }
+
     };
 
 
@@ -163,6 +173,7 @@ const Login = () => {
                 </div> */}
 
                 <InputFields
+                    ref={emailInputRef}
                     id="email"
                     label="E-Mail"
                     type="email"
@@ -201,6 +212,7 @@ const Login = () => {
                 </div> */}
 
                 <InputFields
+                    ref={passwordInputRef}
                     id="password"
                     label="Password"
                     type="password"
@@ -212,7 +224,7 @@ const Login = () => {
 
 
                 <div className={classes.actions}>
-                    <Button type="submit" className={classes.btn} disabled={!formIsValid}>
+                    <Button type="submit" className={classes.btn}>
                         Login
                     </Button>
                 </div>

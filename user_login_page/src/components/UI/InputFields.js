@@ -1,7 +1,21 @@
+import React, { useRef, useImperativeHandle } from "react";
 import classes from "./InputFields.module.css";
 
 
-const InputFields = (props) => {
+const InputFields = React.forwardRef((props, ref) => {
+
+    const inputRef = useRef();
+
+    const activate = () => {
+        inputRef.current.focus();
+    }
+
+    useImperativeHandle(ref, () => {
+        return {
+            myFocus: activate,
+        }
+    })
+
     return <div
         className={`${classes.control} 
     ${props.isValid === false ? classes.invalid : ''}
@@ -17,6 +31,6 @@ const InputFields = (props) => {
             onBlur={props.onBlur}
         />
     </div>
-}
+})
 
 export default InputFields;
